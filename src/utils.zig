@@ -21,3 +21,43 @@ pub fn readNumsFromFile(allocator: *std.mem.Allocator, filePath: []const u8) !*s
 
   return &numbers;
 }
+
+const Direction = enum { forward, down, up };
+const Instruction = struct {
+  direction: Direction,
+  amount: usize
+};
+
+pub fn readSubmarineInstructions(allocator: *std.mem.Allocator, filePath: []const u8) !*std.ArrayList(Instruction) {
+  var buff = try allocator.alloc(u8, 100000);
+  defer allocator.free(buff);
+
+  var contents = try std.fs.cwd().readFile(filePath, buff);
+
+  var instructions = std.ArrayList(Instruction).init(allocator);
+  var index: usize = 0;
+
+  while(index < contents.len) {
+    if(contents[index] == 'f') {
+      try instructions.append(Instruction{
+        .direction = .forward,
+        .amount = contents[index + 8] - 48,
+      });
+      index += 10;
+    } else if(contents[index] == 'u') {
+      try instructions.append(Instruction{
+        .direction = .up,
+        .amount = contents[index + 3] - 48,
+      });
+      index += 5;
+    } else {
+      try instructions.append(Instruction{
+        .direction = .down,
+        .amount = contents[index + 5] - 48,
+      });
+      index += 7;
+    }
+  }
+
+  return &instructions;
+}
