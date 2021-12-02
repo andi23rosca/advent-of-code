@@ -3,7 +3,6 @@ const utils = @import("utils.zig");
 
 pub fn day1(allocator: *std.mem.Allocator) !usize {
     var numbers = try utils.readNumsFromFile(allocator, "inputs/day1.in");
-    defer numbers.deinit();
 
     var index: usize = 1;
     var count: usize = 0;

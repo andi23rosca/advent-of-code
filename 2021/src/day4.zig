@@ -3,7 +3,6 @@ const utils = @import("utils.zig");
 
 pub fn day4(allocator: *std.mem.Allocator) !usize {
     var instructions = try utils.readSubmarineInstructions(allocator, "inputs/day4.in");
-    defer instructions.deinit();
 
     var horizontal: usize = 0;
     var depth: usize = 0;

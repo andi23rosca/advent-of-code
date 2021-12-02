@@ -1,11 +1,13 @@
 const std = @import("std");
 
-pub fn readNumsFromFile(allocator: *std.mem.Allocator, filePath: []const u8) !*std.ArrayList(usize) {
+pub fn readFile(allocator: *std.mem.Allocator, filePath: []const u8) ![]u8 {
   var buff = try allocator.alloc(u8, 100000);
-  defer allocator.free(buff);
-
   var contents = try std.fs.cwd().readFile(filePath, buff);
+  return contents;
+}
 
+pub fn readNumsFromFile(allocator: *std.mem.Allocator, filePath: []const u8) !*std.ArrayList(usize) {
+  var contents = try readFile(allocator, filePath);
   var numbers = std.ArrayList(usize).init(allocator);
   var builder: usize = 0;
 
@@ -29,11 +31,7 @@ const Instruction = struct {
 };
 
 pub fn readSubmarineInstructions(allocator: *std.mem.Allocator, filePath: []const u8) !*std.ArrayList(Instruction) {
-  var buff = try allocator.alloc(u8, 100000);
-  defer allocator.free(buff);
-
-  var contents = try std.fs.cwd().readFile(filePath, buff);
-
+  var contents = try readFile(allocator, filePath);
   var instructions = std.ArrayList(Instruction).init(allocator);
   var index: usize = 0;
 
